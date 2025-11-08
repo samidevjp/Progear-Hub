@@ -57,17 +57,22 @@ const ProductListPage = () => {
   useEffect(() => {
     let filtered = [...products];
 
-    // Filter by category from URL
+    // Filter by category from URL (support hyphenated slugs)
     if (category) {
+      const categorySlug = category.toLowerCase();
       const categoryName = category
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
-      filtered = filtered.filter(
-        (p) =>
-          p.category?.toLowerCase() === category.toLowerCase() ||
+      filtered = filtered.filter((p) => {
+        const productCategorySlug = (p.category || "")
+          .toLowerCase()
+          .replace(/\s+/g, "-");
+        return (
+          productCategorySlug === categorySlug ||
           p.title.toLowerCase().includes(categoryName.toLowerCase())
-      );
+        );
+      });
     }
 
     // Filter by URL search query (from header search)
