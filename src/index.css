@@ -45,3 +45,44 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Range slider styling for price filter */
+.price-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.price-range:focus {
+  outline: none;
+}
+/* WebKit */
+.price-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #171717;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  margin-top: -8px; /* center on 1.5 * h track */
+}
+.price-range::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+  border-radius: 9999px;
+}
+/* Firefox */
+.price-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #171717;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+}
+.price-range::-moz-range-track {
+  height: 6px;
+  background: transparent;
+  border-radius: 9999px;
+}

@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
@@ -12,11 +13,20 @@ import Step2 from "./pages/checkout/Step2";
 import Success from "./pages/checkout/Success";
 import { CheckoutProvider } from "./context/CheckoutContext";
 
+function ScrollToTop() {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [location.pathname, location.search]);
+  return null;
+}
+
 function App() {
   return (
     <Router>
       <CheckoutProvider>
     <div className="min-h-screen">
+          <ScrollToTop />
           <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />

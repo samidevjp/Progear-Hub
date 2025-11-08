@@ -37,6 +37,28 @@ export const CheckoutProvider = ({ children }) => {
     return allProducts.slice(0, 3).map((p) => ({ id: p.id, title: p.title, price: p.price, qty: 1, image: p.image }));
   });
 
+  const addItem = (product, qty = 1) => {
+    if (!product || !product.id) return;
+    setItems((prev) => {
+      const index = prev.findIndex((it) => it.id === product.id);
+      if (index !== -1) {
+        const next = [...prev];
+        next[index] = { ...next[index], qty: next[index].qty + qty };
+        return next;
+      }
+      return [
+        ...prev,
+        {
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+          qty,
+        },
+      ];
+    });
+  };
+
   // Load from localStorage on mount
   useEffect(() => {
     const raw = localStorage.getItem("checkout_state_v1");
@@ -84,6 +106,7 @@ export const CheckoutProvider = ({ children }) => {
     payment,
     agree,
     items,
+    addItem,
     setContact,
     setShipping,
     setBilling,

@@ -23,11 +23,12 @@ const HeroBanner = () => {
       <div className="relative z-10 text-center px-4">
         {/* Main Heading */}
         <h1
-          className="text-white font-bebas uppercase"
+          className="text-white font-bebas uppercase text-[90px] md:text-[100px]"
           style={{
             fontSize: "100px",
             letterSpacing: "0.05em",
             fontWeight: 400,
+            lineHeight: "1",
           }}
         >
           FUEL YOUR PASSION.
@@ -35,8 +36,8 @@ const HeroBanner = () => {
 
         {/* Subheading */}
         <div
-          className="mt-4 text-white font-montserrat font-bold"
-          style={{ fontSize: "28px", lineHeight: 1.5 }}
+          className="mt-4 text-white font-montserrat font-bold text-[20px] md:text-[28px]"
+          style={{ lineHeight: 1.5 }}
         >
           <p>
             Designed to <span className="text-[#EF4444]">perform</span>, crafted

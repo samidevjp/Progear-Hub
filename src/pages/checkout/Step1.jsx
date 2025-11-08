@@ -9,6 +9,8 @@ import {
   RadioCard,
 } from "../../components/checkout/FormControls";
 import { useNavigate } from "react-router-dom";
+import kvOrderPc from "../../assets/image/kv-order-pc.png";
+import kvOrderSp from "../../assets/image/kv-order-sp.png";
 
 const countryOptions = [
   { value: "Australia", label: "Australia" },
@@ -64,9 +66,17 @@ const Step1 = () => {
   };
 
   return (
-    <div className="pt-20">
+    <div className="">
       {/* KV Banner */}
-      <div className="relative w-full h-40 md:h-56 flex items-center justify-center">
+      <div className="relative w-full h-40 md:h-[300px] flex items-center justify-center">
+        <div
+          className="absolute inset-0 bg-cover bg-center md:hidden"
+          style={{ backgroundImage: `url(${kvOrderSp})` }}
+        />
+        <div
+          className="absolute inset-0 bg-cover bg-center hidden md:block"
+          style={{ backgroundImage: `url(${kvOrderPc})` }}
+        />
         <div className="absolute inset-0 bg-[#171717]/50" />
         <h1 className="relative z-10 text-white font-montserrat font-bold text-[28px] md:text-[48px]">
           ORDER FORM

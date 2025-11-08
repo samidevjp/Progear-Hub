@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Eye, ShoppingCart, Star } from 'lucide-react';
+import { useCheckout } from '../context/CheckoutContext';
 
 const ProductCard = ({ product }) => {
+  const { addItem } = useCheckout();
   // デフォルトの評価とレビュー数（商品データにない場合）
   const rating = product.rating || 4.5;
   const reviewCount = product.reviewCount || 65;
@@ -16,9 +18,9 @@ const ProductCard = ({ product }) => {
       {/* Product Image Container */}
       <div className="relative aspect-square overflow-hidden">
         <Link to={`/product/${product.id}`} className="block w-full h-full">
-          <img 
-            src={product.image} 
-            alt={product.title}
+        <img 
+          src={product.image} 
+          alt={product.title}
             className="w-full h-full object-cover"
           />
         </Link>
@@ -45,8 +47,8 @@ const ProductCard = ({ product }) => {
         {/* Product Title */}
         <Link to={`/product/${product.id}`}>
           <h3 className="text-[18px] font-semibold font-montserrat text-[#171717] mt-3 leading-[1.3] text-left hover:text-[#EF4444] transition-colors cursor-pointer">
-            {product.title}
-          </h3>
+          {product.title}
+        </h3>
         </Link>
 
         {/* Product Price */}
@@ -75,7 +77,10 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Add to Cart Button */}
-        <button className="mt-3 w-full h-12 bg-[#171717] text-white text-[16px] font-semibold font-montserrat rounded-xl flex items-center justify-center gap-2 hover:bg-[#EF4444] transition-colors duration-200">
+        <button
+          onClick={() => addItem(product, 1)}
+          className="mt-3 w-full h-12 bg-[#171717] text-white text-[16px] font-semibold font-montserrat rounded-xl flex items-center justify-center gap-2 hover:bg-[#EF4444] transition-colors duration-200"
+        >
           <ShoppingCart size={18} />
           Add To Cart
         </button>

@@ -46,7 +46,10 @@ const OrderSummary = () => {
                 <p className="font-montserrat text-[#171717] truncate">
                   {it.title}
                 </p>
-                <div className="mt-1 flex items-center gap-2">
+                <p className="font-montserrat font-bold text-[#171717] text-[18px] mt-1">
+                  {currency(it.price * it.qty)}
+                </p>
+                <div className="mt-2 flex items-center gap-2">
                   <button
                     onClick={() => decrement(it.id)}
                     className="w-7 h-7 border border-[#E5E5E5] rounded-full hover:bg-[#F9F9F9] flex items-center justify-center"
@@ -69,9 +72,6 @@ const OrderSummary = () => {
                     Delete
                   </button>
                 </div>
-              </div>
-              <div className="font-montserrat font-bold text-[#171717] ml-3 text-[18px]">
-                {currency(it.price * it.qty)}
               </div>
             </div>
           ))}
