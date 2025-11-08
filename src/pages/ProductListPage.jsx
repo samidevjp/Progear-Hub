@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import SectionHeading from '../components/SectionHeading';
 import { products } from '../data/products';
@@ -7,8 +8,9 @@ import { products } from '../data/products';
 const ProductListPage = () => {
   const { category } = useParams();
   const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get('search');
+  const urlSearchQuery = searchParams.get('search');
   
+  const [localSearchQuery, setLocalSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortBy, setSortBy] = useState('newest');
   const [minPrice, setMinPrice] = useState('');
@@ -18,7 +20,7 @@ const ProductListPage = () => {
   const [displayCount, setDisplayCount] = useState(12);
 
   const allCategories = [
-    'Football', 'Running', 'Training', 'Accessories', 
+    'All', 'Football', 'Running', 'Training', 'Accessories', 
     'Cheer Dance', 'Everyday Fitness', 'Tennis', 'Swimming'
   ];
 
@@ -36,22 +38,37 @@ const ProductListPage = () => {
       );
     }
 
-    // Filter by search query
-    if (searchQuery) {
+    // Filter by URL search query (from header search)
+    if (urlSearchQuery) {
       filtered = filtered.filter(p =>
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        p.title.toLowerCase().includes(urlSearchQuery.toLowerCase()) ||
+        p.description?.toLowerCase().includes(urlSearchQuery.toLowerCase())
+      );
+    }
+
+    // Filter by local search query (category search)
+    if (localSearchQuery.trim()) {
+      filtered = filtered.filter(p =>
+        p.title.toLowerCase().includes(localSearchQuery.toLowerCase()) ||
+        p.description?.toLowerCase().includes(localSearchQuery.toLowerCase())
       );
     }
 
     // Filter by selected categories
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter(p => 
-        selectedCategories.some(cat => 
-          p.category?.toLowerCase() === cat.toLowerCase() ||
-          p.title.toLowerCase().includes(cat.toLowerCase())
-        )
-      );
+    // "All"が選択されている場合はフィルタリングしない
+    if (selectedCategories.includes('All')) {
+      // "All"が選択されている場合はすべての商品を表示
+    } else {
+      // 選択されたカテゴリでフィルタリング
+      const categoriesToFilter = selectedCategories.filter(cat => cat !== 'All');
+      if (categoriesToFilter.length > 0) {
+        filtered = filtered.filter(p => 
+          categoriesToFilter.some(cat => 
+            p.category?.toLowerCase() === cat.toLowerCase() ||
+            p.title.toLowerCase().includes(cat.toLowerCase())
+          )
+        );
+      }
     }
 
     // Filter by price range
@@ -79,14 +96,23 @@ const ProductListPage = () => {
 
     setDisplayedProducts(sorted);
     setDisplayCount(12);
-  }, [category, searchQuery, selectedCategories, sortBy, minPrice, maxPrice]);
+  }, [category, urlSearchQuery, localSearchQuery, selectedCategories, sortBy, minPrice, maxPrice]);
 
   const handleCategoryToggle = (category) => {
-    setSelectedCategories(prev =>
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
+    if (category === 'All') {
+      // "All"をチェックした場合、他のチェックボックスをすべて外す
+      setSelectedCategories(prev => prev.includes('All') ? [] : ['All']);
+    } else {
+      // 他のカテゴリをチェックした場合、"All"を外して、そのカテゴリをトグル
+      setSelectedCategories(prev => {
+        const withoutAll = prev.filter(c => c !== 'All');
+        if (withoutAll.includes(category)) {
+          return withoutAll.filter(c => c !== category);
+        } else {
+          return [...withoutAll, category];
+        }
+      });
+    }
   };
 
   const handleApplyFilter = () => {
@@ -99,21 +125,21 @@ const ProductListPage = () => {
 
   const pageTitle = category 
     ? category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : searchQuery 
-    ? `Search: ${searchQuery}`
+    : urlSearchQuery 
+    ? `Search: ${urlSearchQuery}`
     : 'All Products';
 
   return (
     <div className="min-h-screen pt-20">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-8">
+      <div className="max-w-[1200px] mx-auto px-6 py-8">
         {/* Page Title */}
         <div className="mb-8">
           <SectionHeading>{pageTitle}</SectionHeading>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-8">
           {/* Filter Sidebar */}
-          <aside className="lg:w-64 flex-shrink-0">
+          <aside>
             {/* Mobile Filter Toggle */}
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -144,7 +170,7 @@ const ProductListPage = () => {
                         onChange={() => handleCategoryToggle(cat)}
                         className="w-4 h-4 text-[#EF4444] border-gray-300 rounded focus:ring-[#EF4444] focus:ring-2"
                       />
-                      <span className="ml-2 text-[#171717] font-montserrat text-sm">{cat}</span>
+                      <span className="ml-2 text-[#171717] font-medium font-montserrat text-sm">{cat}</span>
                     </label>
                   ))}
                 </div>
@@ -201,10 +227,25 @@ const ProductListPage = () => {
           </aside>
 
           {/* Product Grid */}
-          <div className="flex-1">
+          <div>
+            {/* Search Bar */}
+            <div className="relative mb-6">
+              <input
+                type="text"
+                placeholder="Search this category..."
+                value={localSearchQuery}
+                onChange={(e) => setLocalSearchQuery(e.target.value)}
+                className="w-full h-12 pl-4 pr-12 border border-[#E5E5E5] rounded-lg font-medium font-montserrat focus:outline-none focus:border-[#EF4444] transition-colors"
+              />
+              <Search 
+                size={20} 
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none"
+              />
+            </div>
+
             {displayedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                   {displayedProducts.slice(0, displayCount).map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
