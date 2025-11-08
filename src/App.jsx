@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -22,8 +22,10 @@ function ScrollToTop() {
 }
 
 function App() {
+  const isFileProtocol = typeof window !== "undefined" && window.location.protocol === "file:";
+  const RouterComponent = isFileProtocol ? HashRouter : BrowserRouter;
   return (
-    <Router>
+    <RouterComponent>
       <CheckoutProvider>
     <div className="min-h-screen">
           <ScrollToTop />
@@ -43,7 +45,7 @@ function App() {
       <Footer />
     </div>
       </CheckoutProvider>
-    </Router>
+    </RouterComponent>
   );
 }
 
