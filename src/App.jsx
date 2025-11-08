@@ -1,33 +1,28 @@
-import HeroBanner from './components/HeroBanner';
-import ProductSection from './components/ProductSection';
-import PromoBanner from './components/PromoBanner';
-import BlogSection from './components/BlogSection';
-import Footer from './components/Footer';
-import { products } from './data/products';
-import { blogs } from './data/blogs';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import HomePage from "./pages/HomePage";
+import ProductListPage from "./pages/ProductListPage";
+import BlogPage from "./pages/BlogPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
-  // Split products into featured and new arrivals
-  const featuredProducts = products.slice(0, 4);
-  const newArrivals = products.slice(2, 6);
-
   return (
-    <div className="min-h-screen">
-      <HeroBanner />
-      <ProductSection 
-        title="Featured Products" 
-        products={featuredProducts}
-        sectionId="products"
-      />
-      <PromoBanner />
-      <ProductSection 
-        title="New Arrivals" 
-        products={newArrivals}
-        sectionId="new-arrivals"
-      />
-      <BlogSection blogs={blogs} />
-      <Footer />
-    </div>
+    <Router>
+      <div className="min-h-screen">
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductListPage />} />
+          <Route path="/products/:category" element={<ProductListPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
