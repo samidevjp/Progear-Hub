@@ -11,7 +11,10 @@ const ProductSection = ({ title, products, sectionId }) => {
     const el = trackRef.current;
     if (!el) return;
     const amount = Math.max(280, Math.floor(el.clientWidth * 0.9));
-    el.scrollBy({ left: dir === "next" ? amount : -amount, behavior: "smooth" });
+    el.scrollBy({
+      left: dir === "next" ? amount : -amount,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -81,7 +84,7 @@ const ProductSection = ({ title, products, sectionId }) => {
         <div className="mt-8 text-center">
           <Link
             to="/products"
-            className="inline-block bg-[#EF4444] text-white text-[16px] font-semibold font-montserrat rounded-lg px-6 py-3 hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#EF4444] focus-visible:ring-offset-white"
+            className="min-w-[160px] inline-block bg-[#EF4444] text-white text-[16px] font-semibold font-montserrat rounded-lg px-6 py-3 hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#EF4444] focus-visible:ring-offset-white"
           >
             See All
           </Link>

@@ -52,7 +52,7 @@ const HeroBanner = () => {
         {/* CTA Button */}
         <a
           href="#products"
-          className="inline-block bg-[#EF4444] text-white rounded-full font-semibold hover:opacity-90 transition-opacity font-montserrat mt-8"
+          className="min-w-[160px] inline-block bg-[#EF4444] text-white rounded-lg font-semibold hover:opacity-90 transition-opacity font-montserrat mt-8"
           style={{
             height: "48px",
             padding: "0 24px",
