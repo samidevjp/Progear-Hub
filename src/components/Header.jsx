@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { products } from '../data/products';
 
 const Header = () => {
   const [isShopOpen, setIsShopOpen] = useState(false);
@@ -28,6 +29,23 @@ const Header = () => {
       setSearchQuery('');
     }
   };
+
+  const handleProductClick = (query) => {
+    navigate(`/products?search=${encodeURIComponent(query)}`);
+    setIsSearchOpen(false);
+    setSearchQuery('');
+  };
+
+  // 検索候補を計算
+  const searchSuggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    return products
+      .filter(product => 
+        product.title.toLowerCase().includes(query)
+      )
+      .slice(0, 5); // 最大5件
+  }, [searchQuery]);
 
   return (
     <>
@@ -116,20 +134,50 @@ const Header = () => {
             {/* Right: Search + Cart */}
             <div className="flex items-center space-x-4">
               {/* Search Bar */}
-              <form onSubmit={handleSearch} className="relative">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-[300px] px-4 py-2 pr-10 bg-transparent border border-white rounded-lg text-white placeholder-white/70 font-montserrat font-medium focus:outline-none focus:border-[#EF4444]"
-                />
-                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </form>
+              <div className="relative">
+                <form onSubmit={handleSearch} className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-[300px] px-4 py-2 pr-10 bg-transparent border border-white rounded-lg text-white placeholder-white/70 font-montserrat font-medium focus:outline-none focus:border-[#EF4444]"
+                  />
+                  <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </form>
+                {/* Search Suggestions Dropdown */}
+                {searchSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 mt-2 w-[300px] bg-white rounded-lg shadow-lg overflow-hidden z-50">
+                    <div className="max-h-64 overflow-y-auto">
+                      {searchSuggestions.map((product) => (
+                        <button
+                          key={product.id}
+                          onClick={() => handleProductClick(product.title)}
+                          className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
+                        >
+                          <img 
+                            src={product.image} 
+                            alt={product.title}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[#171717] font-montserrat text-sm font-medium truncate">
+                              {product.title}
+                            </p>
+                            <p className="text-[#EF4444] font-montserrat text-sm font-bold">
+                              ${product.price.toFixed(2)}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Cart Icon */}
               <button className="relative">
@@ -246,21 +294,49 @@ const Header = () => {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleSearch} className="relative">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-                className="w-full px-4 py-3 pr-12 bg-transparent border-2 border-white rounded-lg text-white placeholder-white/70 font-montserrat font-medium text-lg focus:outline-none focus:border-[#EF4444]"
-              />
-              <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            </form>
+            <div className="relative">
+              <form onSubmit={handleSearch} className="relative">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full px-4 py-3 pr-12 bg-transparent border-2 border-white rounded-lg text-white placeholder-white/70 font-montserrat font-medium text-lg focus:outline-none focus:border-[#EF4444]"
+                />
+                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </form>
+              {/* Mobile Search Suggestions */}
+              {searchSuggestions.length > 0 && (
+                <div className="mt-4 bg-white rounded-lg shadow-lg overflow-hidden max-h-64 overflow-y-auto">
+                  {searchSuggestions.map((product) => (
+                    <button
+                      key={product.id}
+                      onClick={() => handleProductClick(product.title)}
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
+                    >
+                      <img 
+                        src={product.image} 
+                        alt={product.title}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[#171717] font-montserrat text-base font-medium truncate">
+                          {product.title}
+                        </p>
+                        <p className="text-[#EF4444] font-montserrat text-base font-bold">
+                          ${product.price.toFixed(2)}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

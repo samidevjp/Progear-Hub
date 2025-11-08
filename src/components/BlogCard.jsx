@@ -1,24 +1,27 @@
 const BlogCard = ({ blog }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-      <div className="aspect-video overflow-hidden">
-        <img 
-          src={blog.image} 
-          alt={blog.title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-        />
-      </div>
-      <div className="p-4">
-        <h3 className="text-xl font-bold text-[#171717] mb-2 font-montserrat">
-          {blog.title}
-        </h3>
-        <p className="text-gray-600 mb-4 font-montserrat line-clamp-3">
-          {blog.description}
-        </p>
-        <button className="text-[#EF4444] font-bold hover:underline font-montserrat">
-          Read More
-        </button>
-      </div>
+    <div>
+      {/* Blog Image */}
+      <img 
+        src={blog.image} 
+        alt={blog.title}
+        className="w-full h-auto rounded-xl object-cover mb-4"
+      />
+      
+      {/* Blog Title */}
+      <h3 className="font-medium font-montserrat text-[#171717] mb-2 leading-[1.3] text-left text-[20px] md:text-[22px] lg:text-[26px]">
+        {blog.title}
+      </h3>
+      
+      {/* Blog Description */}
+      <p className="font-medium font-montserrat text-[#171717] mb-4 leading-[1.5] text-left line-clamp-3 text-[15px] md:text-[16px] lg:text-[18px]">
+        {blog.description}
+      </p>
+      
+      {/* Read More Button */}
+      <button className="bg-[#171717] text-white text-[16px] font-semibold font-montserrat rounded-lg px-6 py-3 hover:bg-[#EF4444] transition-colors duration-200">
+        Read More
+      </button>
     </div>
   );
 };

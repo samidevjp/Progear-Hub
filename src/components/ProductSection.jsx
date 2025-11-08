@@ -9,7 +9,7 @@ const ProductSection = ({ title, products, sectionId }) => {
           <SectionHeading>{title}</SectionHeading>
           <a
             href="#products"
-            className="text-[#EF4444] font-bold hover:underline font-montserrat"
+            className="bg-[#EF4444] text-white text-[16px] font-semibold font-montserrat rounded-lg px-6 py-3 hover:opacity-90 transition-opacity duration-200 inline-block"
           >
             See All
           </a>
